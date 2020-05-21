@@ -72,7 +72,7 @@ public class ComprarFilmesController extends HttpServlet {
 			filme = fService.buscarFilme(idFilme);
 			System.out.println(filme);
 			request.setAttribute("filme", filme);
-			saida = "Filme.jsp";
+			saida = "FilmeVisualizacao.jsp";
 			break;
 		}
 		
