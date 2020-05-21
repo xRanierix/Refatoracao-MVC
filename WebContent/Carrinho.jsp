@@ -46,12 +46,15 @@
     		}
     		if (caixas.length == 0){
     			document.getElementById("btnVisualizar").disabled = true;
+    			document.getElementById("btnFinalizar").disabled = true;
     			document.getElementById("btnExcluir").disabled = true;
     		} else if (caixas.length == 1){
     			document.getElementById("btnVisualizar").disabled = false;
+    			document.getElementById("btnFinalizar").disabled = false;
         		document.getElementById("btnExcluir").disabled = false;
     		} else {
     			document.getElementById("btnVisualizar").disabled = true;
+    			document.getElementById("btnFinalizar").disabled = false;
       			document.getElementById("btnExcluir").disabled = false;
    			}
     	}
