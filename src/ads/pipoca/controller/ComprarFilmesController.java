@@ -21,7 +21,7 @@ import ads.pipoca.model.service.FilmeService;
 public class ComprarFilmesController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String acao = request.getParameter("acao");
@@ -30,20 +30,22 @@ public class ComprarFilmesController extends HttpServlet {
 		HttpSession session = request.getSession();
 		ArrayList<Filme> carrinho = null;
 		String id_filme = null;
-		switch(acao) {			int idFilme = -1;
+		int idFilme = -1;
 		ArrayList<Integer> listaIds = null;
+		ArrayList<Filme> filmes = null;
 		Filme filme = null;
+		Object aux = null;
 
 		switch (acao) {
 		case "btn-comprar-de-exibir-filmes-jsp":
 			ArrayList<Integer> lista = obterIds(request);
-			ArrayList<Filme> filmes = fService.listarFilmes(lista);
-			//pegar o carrinho da sessão e ver se já tem filmes
-			Object aux = session.getAttribute("filmes");
-			if(aux != null && aux instanceof ArrayList<?>) {
-				carrinho = (ArrayList<Filme>)aux;
+			filmes = fService.listarFilmes(lista);
+			// pegar o carrinho da sessão e ver se já tem filmes
+			aux = session.getAttribute("filmes");
+			if (aux != null && aux instanceof ArrayList<?>) {
+				carrinho = (ArrayList<Filme>) aux;
 				if (carrinho.size() > 0) {
-					for(Filme f:filmes) {
+					for (Filme f : filmes) {
 						carrinho.add(f);
 					}
 				} else {
@@ -60,7 +62,7 @@ public class ComprarFilmesController extends HttpServlet {
 			request.setAttribute("filmes", filmes);
 			saida = "ExibirFilmes.jsp";
 			break;
-				
+
 		case "btn-visualizar-de-carrinho-jsp":
 			listaIds = obterIds(request);
 			if (listaIds != null && listaIds.size() > 0) {
@@ -74,23 +76,45 @@ public class ComprarFilmesController extends HttpServlet {
 			request.setAttribute("filme", filme);
 			saida = "FilmeVisualizacao.jsp";
 			break;
-		}
 		
+		case"btn-excluir-de-modal-carrinho-jsp":
+			listaIds = obterIds(request);
+			filmes = fService.listarFilmes(listaIds);
+			// pegar o carrinho da sessão e ver se já tem filmes
+			aux = session.getAttribute("filmes");
+			if (aux != null && aux instanceof ArrayList<?>) {
+				carrinho = (ArrayList<Filme>) aux;
+				if (carrinho.size() > 0) {
+					for (Filme f : filmes) {
+						carrinho.add(f);
+					}
+				} else {
+					carrinho = filmes;
+				}
+			} else {
+				carrinho = filmes;
+			}
+			session.setAttribute("filmes", carrinho);
+			saida = "Carrinho.jsp";
+			break;
+			
+		}
+
 		RequestDispatcher view = request.getRequestDispatcher(saida);
 		view.forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
-	private ArrayList<Integer> obterIds(HttpServletRequest request){
+
+	private ArrayList<Integer> obterIds(HttpServletRequest request) {
 		Enumeration<String> pars = request.getParameterNames();
 		ArrayList<Integer> listaIds = new ArrayList<>();
 		String par;
 		String[] vals = null;
-		
+
 		try {
 			while ((par = pars.nextElement()) != null) {
 				if (par.startsWith("box")) {
